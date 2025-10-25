@@ -26,6 +26,9 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @Column(nullable = false)
+    private String holderName;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", unique = true, nullable = false)
     private Profile profile;
