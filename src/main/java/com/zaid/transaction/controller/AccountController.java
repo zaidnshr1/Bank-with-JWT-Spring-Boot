@@ -1,6 +1,7 @@
 package com.zaid.transaction.controller;
 
 import com.zaid.transaction.dto.*;
+import com.zaid.transaction.service.AccountService;
 import com.zaid.transaction.service.TransactionService;
 import com.zaid.transaction.service.TransferService;
 import com.zaid.transaction.service.RegistrationService;
@@ -15,17 +16,17 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     @Autowired
-    private TransferService accountService;
-
+    private TransferService transferService;
     @Autowired
     private RegistrationService registrationService;
-
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private AccountService accountService;
 
     @PostMapping("/transfer")
     public ResponseEntity<TransferResponse> performTransfer(@RequestBody TransferRequest requestingTransfer) {
-        TransferResponse respondingTheTranfer = accountService.transferMoney(requestingTransfer);
+        TransferResponse respondingTheTranfer = transferService.transferMoney(requestingTransfer);
         return ResponseEntity.ok(respondingTheTranfer);
     }
 
@@ -42,5 +43,10 @@ public class AccountController {
                         @RequestParam(value = "10") int size) {
         Page<TransactionHistory> transactionHistory = transactionService.getTransactionHistory(accountNumber, page, size);
         return ResponseEntity.ok(transactionHistory);
+    }
+
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<AboutAccount> getAccountDetails(@PathVariable String accountNumber) {
+        AboutAccount aboutAccount = accountService.getAboutAccount(accountNumber);
     }
 }
