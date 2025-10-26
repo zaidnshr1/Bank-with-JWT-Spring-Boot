@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/v1/banking")
 public class AccountController {
@@ -48,5 +50,13 @@ public class AccountController {
     @GetMapping("/{accountNumber}")
     public ResponseEntity<AboutAccount> getAccountDetails(@PathVariable String accountNumber) {
         AboutAccount aboutAccount = accountService.getAboutAccount(accountNumber);
+        return ResponseEntity.ok(aboutAccount);
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<DepositMoney> depositMoney(@RequestBody DepositMoney depositRequest) {
+        DepositMoney depositMoney = transactionService.depositMoney
+                (depositRequest.getAccountNumber(), depositRequest.getAmount());
+        return ResponseEntity.ok(depositMoney);
     }
 }
