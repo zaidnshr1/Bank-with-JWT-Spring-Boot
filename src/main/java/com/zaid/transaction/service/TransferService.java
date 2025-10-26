@@ -1,6 +1,5 @@
 package com.zaid.transaction.service;
 
-import com.zaid.transaction.config.SecurityConfig;
 import com.zaid.transaction.dto.TransferRequest;
 import com.zaid.transaction.dto.TransferResponse;
 import com.zaid.transaction.exception.AccountNotFoundException;
@@ -19,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Service
-public class AccountService {
+public class TransferService {
 
     @Autowired
     private AccountRepository accountRepository;
