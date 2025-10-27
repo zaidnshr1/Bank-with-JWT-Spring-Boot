@@ -8,15 +8,14 @@ import java.math.BigDecimal;
 @Builder
 public record TransferRequest (
     @NotBlank
+    @Size(min = 8, max = 8, message = "Nomor Akun harus 8 digit")
     String sourceAccountNumber,
     @NotBlank(message = "Nomor Akun Tujuan Harus Diisi")
+    @Size(min = 8, max = 8, message = "Nomor Akun harus 8 digit")
     String targetAccountNumber,
     @NotNull(message = "ISI nominal yang ingin di transfer.")
-    @PositiveOrZero(message = "Minimal jumlah transfer Rp. 1")
+    @Positive(message = "Minimal jumlah transfer Rp. 1")
     BigDecimal amount,
-    @NotBlank(message = "PIN WAJIB DIISI")
-    @Size(min = 6, max = 6, message = "PIN BERUPA 6 KARAKTER.")
-    String pinNumber,
     String description
     )   {}
 

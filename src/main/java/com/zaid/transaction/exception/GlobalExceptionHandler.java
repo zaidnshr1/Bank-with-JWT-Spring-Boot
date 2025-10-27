@@ -1,22 +1,23 @@
-package com.zaid.transaction.config;
+package com.zaid.transaction.exception;
 
 import com.zaid.transaction.dto.RegistrationResponse;
 import com.zaid.transaction.dto.TransferResponse;
-import com.zaid.transaction.exception.AccountNotFoundException;
-import com.zaid.transaction.exception.InvalidInputException;
-import com.zaid.transaction.exception.InvalidPinException;
-import com.zaid.transaction.exception.InvalidTransactionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<TransferResponse> handleAccountNotFoundException(AccountNotFoundException ex) {
-        return buildErrorTransferResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<Object> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        return new ResponseEntity<>(
+                createErrorBody("Akses Ditolak", ex.getMessage()),
+                HttpStatus.FORBIDDEN // 403 Forbidden
+        );
     }
 
     @ExceptionHandler(InvalidPinException.class)
@@ -34,6 +35,14 @@ public class GlobalExceptionHandler {
         return buildErrorRegistrationResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+     @ExceptionHandler(AccountNotFoundException.class)
+     public ResponseEntity<Object> handleNotFoundException(AccountNotFoundException ex) {
+         return new ResponseEntity<>(
+                 createErrorBody("Tidak Ditemukan", ex.getMessage()),
+                 HttpStatus.NOT_FOUND
+         );
+     }
+
     private ResponseEntity<TransferResponse> buildErrorTransferResponse(String message, HttpStatus httpStatus) {
         TransferResponse errorTransferResponse = TransferResponse.builder()
                 .status("FAILED")
@@ -48,6 +57,12 @@ public class GlobalExceptionHandler {
                 .message(message)
                 .build();
         return ResponseEntity.status(httpStatus).body(errorRegistrationResponse);
+    }
+
+    record ErrorResponse(String error, String message) {}
+
+    private Object createErrorBody(String error, String message) {
+        return new ErrorResponse(error, message);
     }
 
 }

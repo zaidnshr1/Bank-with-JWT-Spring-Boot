@@ -5,11 +5,13 @@ import com.zaid.transaction.dto.TransferResponse;
 import com.zaid.transaction.exception.AccountNotFoundException;
 import com.zaid.transaction.exception.InvalidPinException;
 import com.zaid.transaction.exception.InvalidTransactionException;
+import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.model.Transaction;
 import com.zaid.transaction.repository.AccountRepository;
 import com.zaid.transaction.repository.TransactionRepository;
+import com.zaid.transaction.security.service.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +26,7 @@ public class TransferService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final SecurityUtil securityUtil;
 
     @Transactional
     public TransferResponse transferMoney(TransferRequest request) {
@@ -41,10 +43,9 @@ public class TransferService {
         Account targetAccount = accountRepository.findByAccountNumber(request.targetAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException(targetAccountNum));
 
-        Profile sourceProfile = sourceAccount.getProfile();
-
-        if (!passwordEncoder.matches(request.pinNumber(), sourceProfile.getPinNumber())) {
-            throw new InvalidPinException();
+        Long loggedInProfileId = securityUtil.getLoggedInProfileId();
+        if (!sourceAccount.getProfile().getId().equals(loggedInProfileId)) {
+            throw new UnauthorizedAccessException("Akun sumber (" + sourceAccNum + ") bukan milik Anda.");
         }
 
         if (sourceAccount.getBalance().compareTo(amount) < 0) {
