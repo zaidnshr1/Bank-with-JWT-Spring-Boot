@@ -10,6 +10,7 @@ import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.model.Transaction;
 import com.zaid.transaction.repository.AccountRepository;
 import com.zaid.transaction.repository.TransactionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,39 +19,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class TransferService {
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public TransferResponse transferMoney(TransferRequest request) {
-        String sourceAccNum = request.getSourceAccountNumber();
-        String targetAccountNum = request.getTargetAccountNumber();
-        BigDecimal amount = request.getAmount();
+        String sourceAccNum = request.sourceAccountNumber();
+        String targetAccountNum = request.targetAccountNumber();
+        BigDecimal amount = request.amount();
 
         if (sourceAccNum.equals(targetAccountNum)) {
             throw new InvalidTransactionException("Tidak dapat transfer ke akun yang sama.");
         }
 
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidTransactionException("Jumlah transfer harus positif.");
-        }
-
-        Account sourceAccount = accountRepository.findByAccountNumber(request.getSourceAccountNumber())
+        Account sourceAccount = accountRepository.findByAccountNumber(request.sourceAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException(sourceAccNum));
-        Account targetAccount = accountRepository.findByAccountNumber(request.getTargetAccountNumber())
+        Account targetAccount = accountRepository.findByAccountNumber(request.targetAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException(targetAccountNum));
 
         Profile sourceProfile = sourceAccount.getProfile();
 
-        if (!passwordEncoder.matches(request.getPinNumber(), sourceProfile.getPinNumber())) {
+        if (!passwordEncoder.matches(request.pinNumber(), sourceProfile.getPinNumber())) {
             throw new InvalidPinException();
         }
 
@@ -73,7 +66,7 @@ public class TransferService {
         newTransaction.setSourceAccount(sourceAccount);
         newTransaction.setTargetAccount(targetAccount);
         newTransaction.setAmount(amount);;
-        newTransaction.setDescription(request.getDescription());
+        newTransaction.setDescription(request.description());
 
         Transaction savedTransaction = transactionRepository.save(newTransaction);
 

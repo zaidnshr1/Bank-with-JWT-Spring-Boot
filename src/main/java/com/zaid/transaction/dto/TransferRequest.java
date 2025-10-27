@@ -1,21 +1,22 @@
 package com.zaid.transaction.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.*;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
-public class TransferRequest {
+@Builder
+public record TransferRequest (
+    @NotBlank
+    String sourceAccountNumber,
+    @NotBlank(message = "Nomor Akun Tujuan Harus Diisi")
+    String targetAccountNumber,
+    @NotNull(message = "ISI nominal yang ingin di transfer.")
+    @PositiveOrZero(message = "Minimal jumlah transfer Rp. 1")
+    BigDecimal amount,
+    @NotBlank(message = "PIN WAJIB DIISI")
+    @Size(min = 6, max = 6, message = "PIN BERUPA 6 KARAKTER.")
+    String pinNumber,
+    String description
+    )   {}
 
-    private String sourceAccountNumber;
-    private String targetAccountNumber;
-    private BigDecimal amount;
-    private String pinNumber;
-    private String description;
-}

@@ -8,6 +8,7 @@ import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Transaction;
 import com.zaid.transaction.repository.AccountRepository;
 import com.zaid.transaction.repository.TransactionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,19 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
 
     public Page<TransactionHistory> getTransactionHistory(String accountNumber, int page, int size) {
 
-        if (accountRepository.findByAccountNumber(accountNumber).isEmpty()) {
-            throw new AccountNotFoundException(accountNumber);
-        }
+        Account gettingAccount = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -53,8 +51,8 @@ public class TransactionService {
     @Transactional
     public DepositMoney depositMoney(String accountNumber, BigDecimal amount) {
 
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidTransactionException("Nominal transfer tidak boleh kurang dari Rp 0.");
+        if (accountRepository.findByAccountNumber(accountNumber).isEmpty()) {
+            throw new AccountNotFoundException(accountNumber);
         }
 
         Account gettingAccount = accountRepository.findByAccountNumber(accountNumber)
@@ -64,7 +62,7 @@ public class TransactionService {
 
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-        transaction.setDescription("DEPOSIT BERHASIL SEBESAR Rp " + amount);
+        transaction.setDescription("DEPOSIT BERHASIL");
         transaction.setTargetAccount(gettingAccount);
         transaction.setSourceAccount(null);
         transactionRepository.save(transaction);

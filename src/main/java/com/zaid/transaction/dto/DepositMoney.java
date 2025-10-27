@@ -1,13 +1,17 @@
 package com.zaid.transaction.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.math.BigDecimal;
 
-@Getter
 @Builder
-public class DepositMoney {
-    private String accountNumber;
-    private BigDecimal amount;
-}
+public record DepositMoney (
+    @NotBlank
+    String accountNumber,
+    @NotNull
+    @Positive(message = "Minimal jumlah deposit Rp. 1")
+    BigDecimal amount
+){}

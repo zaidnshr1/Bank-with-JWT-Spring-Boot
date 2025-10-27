@@ -4,14 +4,14 @@ import com.zaid.transaction.dto.AboutAccount;
 import com.zaid.transaction.exception.AccountNotFoundException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public AboutAccount getAboutAccount(String accountNumber) {
 

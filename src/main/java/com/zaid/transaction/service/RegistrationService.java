@@ -7,6 +7,7 @@ import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.repository.AccountRepository;
 import com.zaid.transaction.repository.ProfileRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,36 +17,28 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RegistrationService {
 
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final ProfileRepository profileRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public RegistrationResponse registerNewUser(RegistrationRequest requestRegistration) {
 
-        if (requestRegistration.getInitialPin() == null || requestRegistration.getInitialPin().length() > 6 || requestRegistration.getInitialPin().length() < 6) {
-            throw new InvalidInputException("PIN Harus berupa 6 karakter");
-        }
-
-        String hashedPin = passwordEncoder.encode(requestRegistration.getInitialPin());
+        String hashedPin = passwordEncoder.encode(requestRegistration.initialPin());
 
         Profile registProfile = new Profile();
-        registProfile.setFirstName(requestRegistration.getFirstName());
-        registProfile.setLastName(requestRegistration.getLastName());
-        registProfile.setEmail(requestRegistration.getEmail());
+        registProfile.setFirstName(requestRegistration.firstName());
+        registProfile.setLastName(requestRegistration.lastName());
+        registProfile.setEmail(requestRegistration.email());
         registProfile.setPinNumber(hashedPin);
 
         Profile savedProfile = profileRepository.save(registProfile);
 
         Account creatingAccount = new Account();
-        String accountNumber = requestRegistration.getPreferredAccountNumber();
+        String accountNumber = requestRegistration.preferredAccountNumber();
         if (accountNumber == null || accountNumber.isEmpty() || accountRepository.findByAccountNumber(accountNumber).isPresent()) {
             accountNumber = generateUniqueAccountNumber();
         }
