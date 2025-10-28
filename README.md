@@ -1,8 +1,11 @@
-🏦 Banking API using Spring Boot, Spring Security, and JWT
-A simple yet secure banking REST API built with Spring Boot, featuring JWT authentication, role-based access control, and transaction management.
-This project demonstrates real-world backend development principles like layered architecture, secure authentication, and database integration.
+# 🏦 Banking API using Spring Boot, Spring Security, and JWT
 
-🧩 Tech Stack
+A simple yet secure banking REST API built with Spring Boot, featuring JWT authentication, role-based access control, and transaction management. This project demonstrates real-world backend development principles like layered architecture, secure authentication, and database integration.
+
+---
+
+## 🧩 Tech Stack
+
 Java 17
 Spring Boot 3
 Spring Security + JWT
@@ -11,7 +14,11 @@ PostgreSQL
 Maven
 Lombok
 
-⚙️ How to Run
+---
+
+## ⚙️ How to Run
+
+```bash
 # 1. Clone the repository
 git clone https://github.com/zaidnshr1/BankingApp.git
 cd BankingApp
@@ -30,26 +37,38 @@ mvn clean install
 
 # 4. Run the application
 mvn spring-boot:run
+```
 
 Server runs at:
-👉 http://localhost:8080
+👉 [http://localhost:8080](http://localhost:8080)
 
-🔑 Authentication
+---
+
+## 🔑 Authentication
+
 All private endpoints require JWT token.
-Register to get your Account and Profile in headers: /api/v1/banking/register
-Login to get your token via /api/v1/auth/login, then include it in Authorization: Bearer <your_jwt_token>.
+Register to get your Account and Profile in headers: `/api/v1/banking/register`
+Login to get your token via `/api/v1/auth/login`, then include it in `Authorization: Bearer <your_jwt_token>`.
 
-🚀 Main Endpoints
-🔓 Public
-POST	/api/v1/banking/register	Register new account
-POST	/api/v1/auth/login	Authenticate and receive JWT token
+---
 
-🔐 Private (Requires JWT)
-GET	  /api/v1/banking/{accountNumber}	Get account details
-POST	/api/v1/banking/deposit	Deposit money
-POST	/api/v1/banking/transfer	Transfer between accounts
-GET	  /api/v1/banking/history/{accountNumber}	View transaction history
+## 🚀 Main Endpoints
 
-🧑‍💻 Author
+### 🔓 Public
+
+POST  `/api/v1/banking/register`  — Register new account
+POST  `/api/v1/auth/login`  — Authenticate and receive JWT token
+
+### 🔒 Private (Requires JWT)
+
+GET   `/api/v1/banking/{accountNumber}`  — Get account details
+POST  `/api/v1/banking/deposit`  — Deposit money
+POST  `/api/v1/banking/transfer`  — Transfer between accounts
+GET   `/api/v1/banking/history/{accountNumber}`  — View transaction history
+
+---
+
+## 🧑‍💻 Author
+
 Zaid Anshori
 Backend Developer (Java | Spring Boot)
