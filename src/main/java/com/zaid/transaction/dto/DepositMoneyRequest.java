@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.math.BigDecimal;
 
 @Builder
-public record DepositMoney (
+public record DepositMoneyRequest(
     @NotBlank
     @Size(min = 8, max = 8, message = "Nomor Akun harus 8 digit")
     String accountNumber,

@@ -50,8 +50,8 @@ public class AccountController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<DepositMoney> depositMoney(@RequestBody @Valid DepositMoney depositRequest) {
-        DepositMoney depositMoney = transactionService.depositMoney
+    public ResponseEntity<DepositMoneyResponse> depositMoney(@RequestBody @Valid DepositMoneyRequest depositRequest) {
+        DepositMoneyResponse depositMoney = transactionService.depositMoney
                 (depositRequest.accountNumber(), depositRequest.amount());
         return ResponseEntity.ok(depositMoney);
     }

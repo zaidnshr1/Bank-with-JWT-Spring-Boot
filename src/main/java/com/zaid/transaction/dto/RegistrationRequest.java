@@ -11,7 +11,7 @@ public record RegistrationRequest (
     String firstName,
     @NotBlank(message = "Nama Belakang harus diisi.")
     String lastName,
-    @Email
+    @Email(message = "Format Email Harus Valid.")
     String email,
     @Size(min = 6, max = 6, message = "PIN Harus berupa 6 karakter.")
     @NotBlank

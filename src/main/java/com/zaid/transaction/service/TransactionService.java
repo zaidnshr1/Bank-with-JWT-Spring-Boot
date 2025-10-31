@@ -1,9 +1,8 @@
 package com.zaid.transaction.service;
 
-import com.zaid.transaction.dto.DepositMoney;
+import com.zaid.transaction.dto.DepositMoneyResponse;
 import com.zaid.transaction.dto.TransactionHistory;
 import com.zaid.transaction.exception.AccountNotFoundException;
-import com.zaid.transaction.exception.InvalidTransactionException;
 import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Transaction;
@@ -57,8 +56,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public DepositMoney depositMoney(String accountNumber, BigDecimal amount) {
-
+    public DepositMoneyResponse depositMoney(String accountNumber, BigDecimal amount) {
         Account gettingAccount = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(accountNumber));
         Long loggedInProfileId = securityUtil.getLoggedInProfileId();
@@ -77,9 +75,12 @@ public class TransactionService {
         transaction.setSourceAccount(null);
         transactionRepository.save(transaction);
 
-        return DepositMoney.builder()
-                .accountNumber(accountNumber)
-                .amount(gettingAccount.getBalance())
+        return DepositMoneyResponse.builder()
+                .status("SUCCESS")
+                .message("DEPOSIT BERHASIL DILAKUKAN")
+                .accountNumber("Nomor Akun " + gettingAccount.getAccountNumber())
+                .fullName(gettingAccount.getHolderName())
+                .amount(amount)
                 .build();
 
     }
