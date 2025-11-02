@@ -7,6 +7,7 @@ import com.zaid.transaction.service.TransferService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +50,12 @@ public class AccountController {
     public ResponseEntity<DepositMoneyResponse> depositMoney(@RequestBody @Valid DepositMoneyRequest depositRequest) {
         DepositMoneyResponse depositMoney = transactionService.depositMoney(depositRequest);
         return ResponseEntity.ok(depositMoney);
+    }
+
+    @PutMapping("/edit-profile")
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    public ResponseEntity<UpdateProfileResponse> updateProfile(@RequestBody @Valid UpdateProfileRequest request) {
+        UpdateProfileResponse responseChangeProfile = accountService.updateProfile(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseChangeProfile);
     }
 }
