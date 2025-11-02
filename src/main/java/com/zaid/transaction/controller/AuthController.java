@@ -1,16 +1,16 @@
 package com.zaid.transaction.controller;
 
+import com.zaid.transaction.dto.AdminRegistrationRequest;
+import com.zaid.transaction.dto.AdminRegistrationResponse;
 import com.zaid.transaction.dto.AuthRequest;
 import com.zaid.transaction.dto.AuthResponse;
-import com.zaid.transaction.dto.RegistrationRequest;
-import com.zaid.transaction.dto.RegistrationResponse;
-import com.zaid.transaction.security.entity.User;
 import com.zaid.transaction.security.service.JwtService;
 import com.zaid.transaction.security.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +30,9 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<RegistrationResponse> regist(@RequestBody @Valid RegistrationRequest request) {
-        RegistrationResponse response = userService.createUser(request);
+    @PostMapping("/register-admin")
+    public ResponseEntity<AdminRegistrationResponse> regist(@RequestBody @Valid AdminRegistrationRequest request) {
+        AdminRegistrationResponse response = userService.createAdminAccount(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

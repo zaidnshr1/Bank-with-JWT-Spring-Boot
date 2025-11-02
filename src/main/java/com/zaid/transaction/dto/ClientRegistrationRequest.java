@@ -1,12 +1,13 @@
 package com.zaid.transaction.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
-public record RegistrationRequest (
+public record ClientRegistrationRequest(
+    @NotBlank(message = "Nomor Akun Admin harus diisi.")
+    String adminAccountNumber,
     @NotBlank(message = "Nama Depan harus diisi.")
     String firstName,
     @NotBlank(message = "Nama Belakang harus diisi.")

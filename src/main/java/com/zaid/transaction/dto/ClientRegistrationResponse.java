@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.math.BigDecimal;
 
 @Builder
-public record RegistrationResponse(
+public record ClientRegistrationResponse(
     String status,
     String message,
     String fullName,

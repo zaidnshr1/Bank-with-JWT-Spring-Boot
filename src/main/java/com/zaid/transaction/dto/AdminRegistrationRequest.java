@@ -1,0 +1,21 @@
+package com.zaid.transaction.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record AdminRegistrationRequest(
+        @NotBlank(message = "Nama Depan harus diisi.")
+        String firstName,
+        @NotBlank(message = "Nama Belakang harus diisi.")
+        String lastName,
+        @NotBlank(message = "Username Tidak Boleh Kosong")
+        @Size(min = 8, max = 8, message = "Username Terdiri Atas 8 Karakter")
+        String username,
+        @Size(min = 8, max = 8, message = "Nomor Akun Harus berupa 8 karakter.")
+        @NotBlank
+        String preferredAccountNumber,
+        @Size(min = 6, max = 6, message = "PIN Harus berupa 6 karakter.")
+        @NotBlank
+        String initialPin
+) {
+}

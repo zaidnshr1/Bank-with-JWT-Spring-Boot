@@ -1,15 +1,13 @@
 package com.zaid.transaction.exception;
 
 import com.zaid.transaction.dto.AuthResponse;
-import com.zaid.transaction.dto.DepositMoneyResponse;
-import com.zaid.transaction.dto.RegistrationResponse;
+import com.zaid.transaction.dto.ClientRegistrationResponse;
 import com.zaid.transaction.dto.TransferResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +31,9 @@ public class GlobalExceptionHandler  {
     }
 
     @ExceptionHandler(RoleNotFoundException.class)
-    public ResponseEntity<RegistrationResponse> handleRoleNotFoundException(RoleNotFoundException ex) {
-        return new ResponseEntity<RegistrationResponse>(
-                (RegistrationResponse) createErrorBody("Tidak Ditemukan.", ex.getMessage()), HttpStatus.NOT_FOUND
+    public ResponseEntity<ClientRegistrationResponse> handleRoleNotFoundException(RoleNotFoundException ex) {
+        return new ResponseEntity<ClientRegistrationResponse>(
+                (ClientRegistrationResponse) createErrorBody("Tidak Ditemukan.", ex.getMessage()), HttpStatus.NOT_FOUND
         );
     }
 
@@ -52,6 +50,11 @@ public class GlobalExceptionHandler  {
         return (ResponseEntity<AuthResponse>) createErrorBody(String.valueOf(HttpStatus.NOT_FOUND), ex.getMessage());
     }
 
+    @ExceptionHandler(AccountAlreadyExistException.class)
+    public ResponseEntity<ClientRegistrationResponse> handleAccountAlreadyExistException(AccountAlreadyExistException ex) {
+        return (ResponseEntity<ClientRegistrationResponse>) createErrorBody(String.valueOf(HttpStatus.BAD_REQUEST), ex.getMessage());
+    }
+
     @ExceptionHandler(InvalidPinException.class)
     public ResponseEntity<TransferResponse> handleInvalidPinException(InvalidPinException ex) {
         return buildErrorTransferResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -63,7 +66,7 @@ public class GlobalExceptionHandler  {
     }
 
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<RegistrationResponse> handleInvalidInputException(InvalidInputException ex) {
+    public ResponseEntity<ClientRegistrationResponse> handleInvalidInputException(InvalidInputException ex) {
         return buildErrorRegistrationResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -83,8 +86,8 @@ public class GlobalExceptionHandler  {
         return ResponseEntity.status(httpStatus).body(errorTransferResponse);
     }
 
-    private ResponseEntity<RegistrationResponse> buildErrorRegistrationResponse(String message, HttpStatus httpStatus) {
-        RegistrationResponse errorRegistrationResponse = RegistrationResponse.builder()
+    private ResponseEntity<ClientRegistrationResponse> buildErrorRegistrationResponse(String message, HttpStatus httpStatus) {
+        ClientRegistrationResponse errorRegistrationResponse = ClientRegistrationResponse.builder()
                 .status("FAILED")
                 .message(message)
                 .build();

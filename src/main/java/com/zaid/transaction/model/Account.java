@@ -22,7 +22,7 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String accountNumber;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(nullable = false)
