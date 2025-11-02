@@ -5,8 +5,9 @@ import com.zaid.transaction.exception.AccountNotFoundException;
 import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.repository.AccountRepository;
-import com.zaid.transaction.security.service.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,16 +15,17 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final SecurityUtil securityUtil;
 
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     public AboutAccount getAboutAccount(String accountNumber) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Account getAccount = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
-        Long loggedInProfileId = securityUtil.getLoggedInProfileId();
-        if (!getAccount.getId().equals(loggedInProfileId)) {
-            throw new UnauthorizedAccessException("Anda tidak memiliki akses ke akun " + accountNumber);
+        if(!getAccount.getProfile().getUser().getUsername().equals(username)) {
+            throw new UnauthorizedAccessException("Anda Tidak Memiliki Akses Ke Rekening Ini.");
         }
 
         return AboutAccount.builder()

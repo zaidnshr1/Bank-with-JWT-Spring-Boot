@@ -32,6 +32,6 @@ public class Transaction {
     private Account sourceAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_account_id", nullable = false)
+    @JoinColumn(name = "target_account_id")
     private Account targetAccount;
 }

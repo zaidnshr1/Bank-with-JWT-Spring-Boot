@@ -1,5 +1,6 @@
 package com.zaid.transaction.model;
 
+import com.zaid.transaction.security.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "profiles")
-public class Profile implements UserDetails {
+public class Profile {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,47 +29,10 @@ public class Profile implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Account account;
 
-    @Column(nullable = false)
-    private String pinNumber;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public String getPassword() {
-        return this.pinNumber;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
 }

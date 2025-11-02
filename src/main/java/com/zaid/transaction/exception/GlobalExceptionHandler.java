@@ -1,5 +1,6 @@
 package com.zaid.transaction.exception;
 
+import com.zaid.transaction.dto.AuthResponse;
 import com.zaid.transaction.dto.DepositMoneyResponse;
 import com.zaid.transaction.dto.RegistrationResponse;
 import com.zaid.transaction.dto.TransferResponse;
@@ -29,6 +30,26 @@ public class GlobalExceptionHandler  {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<RegistrationResponse> handleRoleNotFoundException(RoleNotFoundException ex) {
+        return new ResponseEntity<RegistrationResponse>(
+                (RegistrationResponse) createErrorBody("Tidak Ditemukan.", ex.getMessage()), HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(Exception ex) {
+        return new ResponseEntity<>(
+                createErrorBody("Internal Server Error", ex.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<AuthResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return (ResponseEntity<AuthResponse>) createErrorBody(String.valueOf(HttpStatus.NOT_FOUND), ex.getMessage());
     }
 
     @ExceptionHandler(InvalidPinException.class)

@@ -3,18 +3,15 @@ package com.zaid.transaction.service;
 import com.zaid.transaction.dto.TransferRequest;
 import com.zaid.transaction.dto.TransferResponse;
 import com.zaid.transaction.exception.AccountNotFoundException;
-import com.zaid.transaction.exception.InvalidPinException;
 import com.zaid.transaction.exception.InvalidTransactionException;
 import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
-import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.model.Transaction;
 import com.zaid.transaction.repository.AccountRepository;
 import com.zaid.transaction.repository.TransactionRepository;
-import com.zaid.transaction.security.service.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +23,20 @@ public class TransferService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
-    private final SecurityUtil securityUtil;
 
     @Transactional
+    @PreAuthorize("hasRole('CLIENT')")
     public TransferResponse transferMoney(TransferRequest request) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Account gettingAccount = accountRepository.findByAccountNumber(request.sourceAccountNumber())
+                .orElseThrow(() -> new AccountNotFoundException(request.sourceAccountNumber()));
+
+        if(!gettingAccount.getProfile().getUser().getUsername().equals(username)) {
+            throw new UnauthorizedAccessException("Anda Tidak Memiliki Akses Ke Rekening Ini.");
+        }
+
         String sourceAccNum = request.sourceAccountNumber();
         String targetAccountNum = request.targetAccountNumber();
         BigDecimal amount = request.amount();
@@ -42,11 +49,6 @@ public class TransferService {
                 .orElseThrow(() -> new AccountNotFoundException(sourceAccNum));
         Account targetAccount = accountRepository.findByAccountNumber(request.targetAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException(targetAccountNum));
-
-        Long loggedInProfileId = securityUtil.getLoggedInProfileId();
-        if (!sourceAccount.getProfile().getId().equals(loggedInProfileId)) {
-            throw new UnauthorizedAccessException("Akun sumber (" + sourceAccNum + ") bukan milik Anda.");
-        }
 
         if (sourceAccount.getBalance().compareTo(amount) < 0) {
             throw new InvalidTransactionException("Saldo tidak mencukupi. Saldo saat ini " + sourceAccount.getBalance());

@@ -9,7 +9,7 @@ public record RegistrationResponse(
     String status,
     String message,
     String fullName,
-    String email,
+    String username,
     String accountNumber,
     BigDecimal initialBalance
 ) {}

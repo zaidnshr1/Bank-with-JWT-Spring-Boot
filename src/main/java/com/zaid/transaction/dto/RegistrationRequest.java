@@ -11,12 +11,14 @@ public record RegistrationRequest (
     String firstName,
     @NotBlank(message = "Nama Belakang harus diisi.")
     String lastName,
-    @Email(message = "Format Email Harus Valid.")
-    String email,
+    @NotBlank(message = "Username Tidak Boleh Kosong")
+    @Size(min = 8, max = 8, message = "Username Terdiri Atas 8 Karakter")
+    String username,
     @Size(min = 6, max = 6, message = "PIN Harus berupa 6 karakter.")
     @NotBlank
     String initialPin,
     @Size(min = 8, max = 8, message = "Nomor Akun Harus berupa 8 karakter.")
+    @NotBlank
     String preferredAccountNumber
 )
     {}

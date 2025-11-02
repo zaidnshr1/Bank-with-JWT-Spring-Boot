@@ -2,6 +2,7 @@ package com.zaid.transaction.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,66 +18,60 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret-key}")
-    private String secretKey;
+    @Value("${jwt.secret}")
+    private String secret;
 
-    @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
+    @Value("${jwt.expiration}")
+    private Long expiration;
+
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, username);
+    }
+
+    private String createToken(Map<String, Object> claims, String username) {
+        return Jwts.builder()
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(signKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private Key signKey() {
+        byte[] keyByte = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyByte);
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        final Claims claims = extractAllCLaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Metode Utama: Membuat JWT
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                // Perubahan: Gunakan Keys.hmacShaKeyFor(..) di signWith
-                .signWith(getSignInKey())
-                .compact();
-    }
-
-    // Metode Utama: Memvalidasi JWT
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllCLaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(signKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

@@ -32,10 +32,10 @@ public class Account {
     @JoinColumn(name = "profile_id", unique = true, nullable = false)
     private Profile profile;
 
-    @OneToMany(mappedBy = "sourceAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sourceAccount", fetch = FetchType.LAZY)
     private List<Transaction> sentTransaction;
 
-    @OneToMany(mappedBy = "targetAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "targetAccount", fetch = FetchType.LAZY)
     private List<Transaction> receivedTransaction;
 
 }
