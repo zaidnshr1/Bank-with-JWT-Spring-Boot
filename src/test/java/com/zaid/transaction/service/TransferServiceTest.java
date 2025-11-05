@@ -2,6 +2,8 @@ package com.zaid.transaction.service;
 
 import com.zaid.transaction.dto.TransferRequest;
 import com.zaid.transaction.dto.TransferResponse;
+import com.zaid.transaction.exception.InvalidTransactionException;
+import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.model.Transaction;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,7 +44,7 @@ public class TransferServiceTest {
 
     private final String SOURCE_ACCOUNT_NUMBER = "12345678";
     private final String TARGET_ACCOUNT_NUMBER = "12344321";
-    private final String LOGGED_IN_USERNAME = "Some Person";
+    private final String LOGGED_IN_USERNAME = "Sapi Moo";
     private final BigDecimal INITIAL_BALANCE = new BigDecimal(100000);
 
     @BeforeEach
@@ -96,8 +99,8 @@ public class TransferServiceTest {
         TransferResponse response = transferService.transferMoney(request);
         assertEquals("SUCCESS", response.status());
         assertEquals("Transfer Uang Berhasil", response.message());
-        assertEquals("12345678", response.sourceAccount());
-        assertEquals("12344321", response.targetAccount());
+        assertEquals(SOURCE_ACCOUNT_NUMBER, response.sourceAccount());
+        assertEquals(TARGET_ACCOUNT_NUMBER, response.targetAccount());
 
         assertEquals(new BigDecimal("70000"), sourceAccount.getBalance());
         assertEquals(new BigDecimal("30000"), targetAccount.getBalance());
@@ -105,6 +108,86 @@ public class TransferServiceTest {
         verify(accountRepository, times(1)).save(sourceAccount);
         verify(accountRepository, times(1)).save(targetAccount);
         verify(transactionRepository, times(1)).save(any(Transaction.class));
+    }
+
+    @Test
+    void transferMoney_ThrowsUnauthorizedAccessException() {
+        TransferRequest request = new TransferRequest(
+                SOURCE_ACCOUNT_NUMBER, TARGET_ACCOUNT_NUMBER, new BigDecimal("10000"), "test"
+        );
+
+        Account sourceAccount = createMockAccount(SOURCE_ACCOUNT_NUMBER, INITIAL_BALANCE, "Kambing Not Verify");
+        when(accountRepository.findByAccountNumber(SOURCE_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(sourceAccount));
+        assertThrows(UnauthorizedAccessException.class, () -> {
+            transferService.transferMoney(request);
+        });
+
+        verify(transactionRepository, never()).save(any());
+    }
+
+    @Test
+    void transferMoney_ThrowsInvalidTransactionException_SameAccount() {
+        TransferRequest request = new TransferRequest(
+                SOURCE_ACCOUNT_NUMBER, SOURCE_ACCOUNT_NUMBER, new BigDecimal("10000"), "test"
+        );
+
+        Account sourceAccount = createMockAccount(SOURCE_ACCOUNT_NUMBER, INITIAL_BALANCE, LOGGED_IN_USERNAME);
+        when(accountRepository.findByAccountNumber(SOURCE_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(sourceAccount));
+
+        assertThrows(InvalidTransactionException.class, () -> {
+            transferService.transferMoney(request);
+        }, "Seharusnya melempar InvalidTransactionException karena akun sama");
+
+        verify(accountRepository, never()).findByAccountNumber(TARGET_ACCOUNT_NUMBER);
+        verify(transactionRepository, never()).save(any());
+    }
+
+    @Test
+    void transferMoney_ThrowsInvalidTransactionException_InsufficientBalance() {
+        BigDecimal transferAmount = new BigDecimal("150000");
+        TransferRequest request = new TransferRequest(
+                SOURCE_ACCOUNT_NUMBER, TARGET_ACCOUNT_NUMBER, transferAmount, "test"
+        );
+
+        Account sourceAccount = createMockAccount(SOURCE_ACCOUNT_NUMBER, INITIAL_BALANCE, LOGGED_IN_USERNAME);
+        Account targetAccount = createMockAccount(TARGET_ACCOUNT_NUMBER, BigDecimal.ZERO, "otherUser");
+
+        when(accountRepository.findByAccountNumber(SOURCE_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(sourceAccount));
+        when(accountRepository.findByAccountNumber(TARGET_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(targetAccount));
+
+        assertThrows(InvalidTransactionException.class, () -> {
+            transferService.transferMoney(request);
+        }, "Seharusnya melempar InvalidTransactionException karena saldo tidak cukup");
+
+        verify(accountRepository, never()).save(any());
+        verify(transactionRepository, never()).save(any());
+    }
+
+    @Test
+    void transferMoney_ThrowsInvalidTransactionException_BelowMinBalance() {
+        BigDecimal transferAmount = new BigDecimal("86000");
+        TransferRequest request = new TransferRequest(
+                SOURCE_ACCOUNT_NUMBER, TARGET_ACCOUNT_NUMBER, transferAmount, "test"
+        );
+
+        Account sourceAccount = createMockAccount(SOURCE_ACCOUNT_NUMBER, INITIAL_BALANCE, LOGGED_IN_USERNAME);
+        Account targetAccount = createMockAccount(TARGET_ACCOUNT_NUMBER, BigDecimal.ZERO, "otherUser");
+
+        when(accountRepository.findByAccountNumber(SOURCE_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(sourceAccount));
+        when(accountRepository.findByAccountNumber(TARGET_ACCOUNT_NUMBER))
+                .thenReturn(Optional.of(targetAccount));
+
+        assertThrows(InvalidTransactionException.class, () -> {
+            transferService.transferMoney(request);
+        }, "Seharusnya melempar InvalidTransactionException karena sisa saldo < 15000");
+
+        verify(accountRepository, never()).save(any());
+        verify(transactionRepository, never()).save(any());
     }
 
 }
