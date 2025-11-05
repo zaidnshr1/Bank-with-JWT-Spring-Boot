@@ -1,4 +1,4 @@
-package com.zaid.transaction.security.service;
+package com.zaid.transaction.service;
 
 import com.zaid.transaction.dto.AdminRegistrationRequest;
 import com.zaid.transaction.dto.AdminRegistrationResponse;
@@ -11,7 +11,6 @@ import com.zaid.transaction.exception.UnauthorizedAccessException;
 import com.zaid.transaction.model.Account;
 import com.zaid.transaction.model.Profile;
 import com.zaid.transaction.repository.AccountRepository;
-import com.zaid.transaction.repository.ProfileRepository;
 import com.zaid.transaction.security.entity.Role;
 import com.zaid.transaction.security.entity.User;
 import com.zaid.transaction.security.repository.RoleRepository;
@@ -32,7 +31,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final ProfileRepository profileRepository;
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
