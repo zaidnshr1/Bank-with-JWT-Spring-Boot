@@ -76,9 +76,6 @@ public class UserService {
         registProfile.setUser(settingUser);
         registProfile.setAccount(creatingAccount);
         creatingAccount.setProfile(registProfile);
-
-//        profileRepository.save(registProfile);
-//        accountRepository.save(creatingAccount);
         userRepository.save(settingUser);
 
         return ClientRegistrationResponse.builder()
