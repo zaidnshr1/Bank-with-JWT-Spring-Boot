@@ -6,14 +6,15 @@ A simple yet secure banking REST API built with Spring Boot, featuring JWT authe
 
 ## 🧩 Tech Stack
 
-- Java 17
+- Java 21
 - Spring Boot 3
-- Spring Security + JWT
+- Spring Security (JWT)
 - Spring Data JPA (Hibernate)
 - PostgreSQL
 - Maven
 - Lombok
 - JUnit & Mockito
+- Springdoc-OpenAPI (Swagger)
 
 ---
 
