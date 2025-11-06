@@ -6,13 +6,14 @@ A simple yet secure banking REST API built with Spring Boot, featuring JWT authe
 
 ## 🧩 Tech Stack
 
-Java 17
-Spring Boot 3
-Spring Security + JWT
-Spring Data JPA (Hibernate)
-PostgreSQL
-Maven
-Lombok
+- Java 17
+- Spring Boot 3
+- Spring Security + JWT
+- Spring Data JPA (Hibernate)
+- PostgreSQL
+- Maven
+- Lombok
+- JUnit & Mockito
 
 ---
 
@@ -37,38 +38,31 @@ mvn clean install
 
 # 4. Run the application
 mvn spring-boot:run
+
+# 5. Go to the PostgreSql
+insert into roles (id, name) values (1, ROLE_CLIENT), (2, ROLE_ADMIN);
 ```
 
 Server runs at:
 👉 [http://localhost:8080](http://localhost:8080)
 
----
-
-## 🔑 Authentication
-
-All private endpoints require JWT token.
-Register to get your Account and Profile in headers: `/api/v1/banking/register`
-Login to get your token via `/api/v1/auth/login`, then include it in `Authorization: Bearer <your_jwt_token>`.
-
----
 
 ## 🚀 Main Endpoints
 
 ### 🔓 Public
 
-POST  `/api/v1/banking/register`  — Register new account
-POST  `/api/v1/auth/login`  — Authenticate and receive JWT token
+POST  `/api/v1/auth/register-admin` Register Admin account  
+POST  `/api/v1/auth/login`  Authenticate and receive JWT token  
 
 ### 🔒 Private (Requires JWT)
 
-GET   `/api/v1/banking/{accountNumber}`  — Get account details
-POST  `/api/v1/banking/deposit`  — Deposit money
-POST  `/api/v1/banking/transfer`  — Transfer between accounts
-GET   `/api/v1/banking/history/{accountNumber}`  — View transaction history
+## Admin (Jwt From Login Admin)
+POST   `/api/v1/admin/register-user}`  Admin Register Client account  
+PUT   `/api/v1/admin/disable-account`  Admin Disable Client Account  
 
----
-
-## 🧑‍💻 Author
-
-Zaid Anshori
-Backend Developer (Java | Spring Boot)
+## Client (Jwt From Login Client)
+POST  `//api/v1/account/deposit`  Client can deposit money  
+POST  `/api/v1/account/transfer`  Transfer to another accounts  
+GET   `/api/v1/account/history/{accountNumber}`  View transaction history  
+GET   `/api/v1/account/{accountNumber}`  View Account details  
+PUT   `/api/v1/account/edit-profile`  Update first or last name  
