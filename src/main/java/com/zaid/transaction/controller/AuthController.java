@@ -6,6 +6,7 @@ import com.zaid.transaction.dto.AuthRequest;
 import com.zaid.transaction.dto.AuthResponse;
 import com.zaid.transaction.security.service.JwtService;
 import com.zaid.transaction.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+@SecurityRequirement(name = "bearerAuth")
 public class AuthController {
 
     private final JwtService jwtService;

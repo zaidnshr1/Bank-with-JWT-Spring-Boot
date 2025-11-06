@@ -4,6 +4,7 @@ import com.zaid.transaction.dto.*;
 import com.zaid.transaction.service.AccountService;
 import com.zaid.transaction.service.TransactionService;
 import com.zaid.transaction.service.TransferService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/account")
+@SecurityRequirement(name = "bearerAuth")
 public class AccountController {
 
     private final TransferService transferService;
