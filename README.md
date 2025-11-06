@@ -13,6 +13,7 @@ A simple yet secure banking REST API built with Spring Boot, featuring JWT authe
 - PostgreSQL
 - Maven
 - Lombok
+- Validation & Exception Handler
 - JUnit & Mockito
 - Springdoc-OpenAPI (Swagger)
 
