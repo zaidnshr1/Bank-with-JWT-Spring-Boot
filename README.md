@@ -17,6 +17,90 @@ A simple yet secure banking REST API built with Spring Boot, featuring JWT authe
 
 ---
 
+## Project Overview
+transaction/  
+├─ pom.xml  
+├─ README.md  
+├─ src/  
+│ ├─ main/  
+│ │ ├─ java/  
+│ │ │   └─ com/  
+│ │ │       └─ zaid/  
+│ │ │           └─ transaction/  
+│ │ │               ├─ controller/  
+│ │ │               │  ├─ AccountController.java  
+│ │ │               │  ├─ AdministrationController.java  
+│ │ │               │  └─ AuthController.java  
+│ │ │               ├─ dto/  
+│ │ │               │  ├─ AboutAccount.java  
+│ │ │               │  ├─ AdminRegistrationRequest.java  
+│ │ │               │  ├─ AdminRegistrationResponse.java  
+│ │ │               │  ├─ AuthRequest.java  
+│ │ │               │  ├─ AuthResponse.java  
+│ │ │               │  ├─ ClientRegistrationRequest.java  
+│ │ │               │  ├─ ClientRegistrationResponse.java  
+│ │ │               │  ├─ DepositMoneyRequest.java  
+│ │ │               │  ├─ DisableAccountRequest.java  
+│ │ │               │  ├─ DisableAccountResponse.java  
+│ │ │               │  ├─ TransactionHistory.java  
+│ │ │               │  ├─ TransferRequest.java  
+│ │ │               │  ├─ TransferResponse.java  
+│ │ │               │  ├─ UpdateProfileRequest.java  
+│ │ │               │  ├─ UpdateProfileResponse.java  
+│ │ │               ├─ exception/  
+│ │ │               │  ├─ AccountAlreadyExistException.java  
+│ │ │               │  ├─ AccountNotFoundException.java  
+│ │ │               │  ├─ EmailNotFoundException.java  
+│ │ │               │  ├─ InvalidInputException.java  
+│ │ │               │  ├─ InvalidPinException.java  
+│ │ │               │  ├─ InvalidTransactionException.java  
+│ │ │               │  ├─ RoleNotFoundException.java  
+│ │ │               │  ├─ UnauthorizedAccessException.java  
+│ │ │               │  ├─ UsernameNotFoundException.java  
+│ │ │               │  └─ GlobalExceptionHandler.java  
+│ │ │               ├─ model/  
+│ │ │               │  ├─ Account.java  
+│ │ │               │  ├─ Profile.java  
+│ │ │               │  └─ Transaction.java  
+│ │ │               ├─ repository/  
+│ │ │               │  ├─ AccountRepository.java  
+│ │ │               │  ├─ ProfileRepository.java  
+│ │ │               │  └─ TransactionRepository.java  
+│ │ │               ├─ security/  
+│ │ │               │  ├─ config/  
+│ │ │               │  │  ├─ SecurityBeans.java  
+│ │ │               │  │  └─ SecurityConfig.java  
+│ │ │               │  ├─  entity/  
+│ │ │               │  │  ├─ Role.java  
+│ │ │               │  │  └─ User.java  
+│ │ │               │  ├─  repository/  
+│ │ │               │  │  ├─ RoleRepository.java  
+│ │ │               │  │  └─ UserRepository.java  
+│ │ │               │  └─  service/  
+│ │ │               │  ├─ CustomUserDetailsService.java  
+│ │ │               │  ├─ JwtAuthFilter.java  
+│ │ │               │  └─ JwtService.java  
+│ │ │               └─ service/  
+│ │ │                  ├─ AccountService.java  
+│ │ │                  ├─ TransactionService.java  
+│ │ │                  ├─ TransferService.java  
+│ │ │                  └─ UserService.java  
+│ │ └─ resources/  
+│ │     ├─ application.properties  
+│ │     └─ static/ (optional)  
+│ └─ test/  
+│    └─ java/  
+│        └─ com/  
+│           └─ zaid/  
+│              └─ transaction/  
+│                  └─ service/  
+│                     ├─ TransferServiceIntegrationTest.java  
+│                     ├─ TransferServiceUnitTest.java  
+│                     └─ UserServiceTest.java  
+└─ .gitignore
+
+---
+
 ## ⚙️ How to Run
 
 ```bash
