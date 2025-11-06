@@ -1,6 +1,6 @@
 # 🏦 Banking API using Spring Boot, Spring Security, and JWT
 
-A simple yet secure banking REST API built with Spring Boot, featuring JWT authentication, role-based access control, and transaction management. This project demonstrates real-world backend development principles like layered architecture, secure authentication, and database integration.
+A simple yet secure banking REST API built with Spring Boot, featuring JWT authentication, role-based access control, and transaction management. This project demonstrates backend development principles like layered architecture, secure authentication, database integration, clear documentation.
 
 ---
 
@@ -15,90 +15,6 @@ A simple yet secure banking REST API built with Spring Boot, featuring JWT authe
 - Lombok
 - JUnit & Mockito
 - Springdoc-OpenAPI (Swagger)
-
----
-
-## Project Overview
-transaction/  
-├─ pom.xml  
-├─ README.md  
-├─ src/  
-│ ├─ main/  
-│ │ ├─ java/  
-│ │ │   └─ com/  
-│ │ │       └─ zaid/  
-│ │ │           └─ transaction/  
-│ │ │               ├─ controller/  
-│ │ │               │  ├─ AccountController.java  
-│ │ │               │  ├─ AdministrationController.java  
-│ │ │               │  └─ AuthController.java  
-│ │ │               ├─ dto/  
-│ │ │               │  ├─ AboutAccount.java  
-│ │ │               │  ├─ AdminRegistrationRequest.java  
-│ │ │               │  ├─ AdminRegistrationResponse.java  
-│ │ │               │  ├─ AuthRequest.java  
-│ │ │               │  ├─ AuthResponse.java  
-│ │ │               │  ├─ ClientRegistrationRequest.java  
-│ │ │               │  ├─ ClientRegistrationResponse.java  
-│ │ │               │  ├─ DepositMoneyRequest.java  
-│ │ │               │  ├─ DisableAccountRequest.java  
-│ │ │               │  ├─ DisableAccountResponse.java  
-│ │ │               │  ├─ TransactionHistory.java  
-│ │ │               │  ├─ TransferRequest.java  
-│ │ │               │  ├─ TransferResponse.java  
-│ │ │               │  ├─ UpdateProfileRequest.java  
-│ │ │               │  ├─ UpdateProfileResponse.java  
-│ │ │               ├─ exception/  
-│ │ │               │  ├─ AccountAlreadyExistException.java  
-│ │ │               │  ├─ AccountNotFoundException.java  
-│ │ │               │  ├─ EmailNotFoundException.java  
-│ │ │               │  ├─ InvalidInputException.java  
-│ │ │               │  ├─ InvalidPinException.java  
-│ │ │               │  ├─ InvalidTransactionException.java  
-│ │ │               │  ├─ RoleNotFoundException.java  
-│ │ │               │  ├─ UnauthorizedAccessException.java  
-│ │ │               │  ├─ UsernameNotFoundException.java  
-│ │ │               │  └─ GlobalExceptionHandler.java  
-│ │ │               ├─ model/  
-│ │ │               │  ├─ Account.java  
-│ │ │               │  ├─ Profile.java  
-│ │ │               │  └─ Transaction.java  
-│ │ │               ├─ repository/  
-│ │ │               │  ├─ AccountRepository.java  
-│ │ │               │  ├─ ProfileRepository.java  
-│ │ │               │  └─ TransactionRepository.java  
-│ │ │               ├─ security/  
-│ │ │               │  ├─ config/  
-│ │ │               │  │  ├─ SecurityBeans.java  
-│ │ │               │  │  └─ SecurityConfig.java  
-│ │ │               │  ├─  entity/  
-│ │ │               │  │  ├─ Role.java  
-│ │ │               │  │  └─ User.java  
-│ │ │               │  ├─  repository/  
-│ │ │               │  │  ├─ RoleRepository.java  
-│ │ │               │  │  └─ UserRepository.java  
-│ │ │               │  └─  service/  
-│ │ │               │  ├─ CustomUserDetailsService.java  
-│ │ │               │  ├─ JwtAuthFilter.java  
-│ │ │               │  └─ JwtService.java  
-│ │ │               └─ service/  
-│ │ │                  ├─ AccountService.java  
-│ │ │                  ├─ TransactionService.java  
-│ │ │                  ├─ TransferService.java  
-│ │ │                  └─ UserService.java  
-│ │ └─ resources/  
-│ │     ├─ application.properties  
-│ │     └─ static/ (optional)  
-│ └─ test/  
-│    └─ java/  
-│        └─ com/  
-│           └─ zaid/  
-│              └─ transaction/  
-│                  └─ service/  
-│                     ├─ TransferServiceIntegrationTest.java  
-│                     ├─ TransferServiceUnitTest.java  
-│                     └─ UserServiceTest.java  
-└─ .gitignore
 
 ---
 
@@ -142,7 +58,7 @@ POST  `/api/v1/auth/login`  Authenticate and receive JWT token
 ### 🔒 Private (Requires JWT)
 
 ## Admin (Jwt From Login Admin)
-POST   `/api/v1/admin/register-user}`  Admin Register Client account  
+POST   `/api/v1/admin/register-user`  Admin Register Client account  
 PUT   `/api/v1/admin/disable-account`  Admin Disable Client Account  
 
 ## Client (Jwt From Login Client)
@@ -151,3 +67,90 @@ POST  `/api/v1/account/transfer`  Transfer to another accounts
 GET   `/api/v1/account/history/{accountNumber}`  View transaction history  
 GET   `/api/v1/account/{accountNumber}`  View Account details  
 PUT   `/api/v1/account/edit-profile`  Update first or last name  
+  
+  
+# 📷 DOCUMENTATION
+## Creating Admin Account  
+#### the constraints:  
+- firstName : Not Null
+- lastName : Not Null
+- username : 8 characters
+- preferredAccountNumber : 8 characters
+- initialPin : 6 characters
+##### 1st, you can try to create an Admin account. it's public for easily setup purposes. As Admin, you can creating and disable the Client Account.
+![Creating Admin Account (Put the Right Format to Regist)](images/success_create_admin_account.png)
+
+
+## Admin Login  
+#### the constraints:  
+- username : Not Null
+- initialPin : Not Null
+##### 2nd, if you want to create client account and then having transaction, you need the client account. To have client account, you need to create it as Admin. So, please login as Admin first :
+- Go to POST  `/api/v1/auth/login`
+- Put the right username and pinNumber you already create before.
+- Server will validating and generating the token if you pass the right username & password.
+- Copy the token and scroll up to Authorize, click the button and paste the token for authorize.
+![Creating Admin Account (Put the Right Format to Regist)](images/success_admin_login.png)
+
+## Admin Creating Client Account  
+#### the constraints:  
+- adminAccountNumber : Not Null
+- firstName : Not Null
+- lastName: Not Null
+- username : 8 Characters
+- initialPin : 6 Characters
+- preferredAccountNumber : 8 Characters
+##### 3rd, Creating the 1st client account. After that, you can have the initial balance which 0.
+![Creating Admin Account (Put the Right Format to Regist)](images/success_admin_registring_client_account.png)
+
+## Client Login  
+#### the constraints:  
+- username : Not Null
+- initialPin : Not Null
+##### 4th, Right now you are not will be admin anymore. You need being a client to have a transaction. So :
+- Go to POST  `/api/v1/auth/login` again
+- Gain the token
+- Remove the Admin token you login before, chane it by paste the client token
+![Creating Admin Account (Put the Right Format to Regist)](images/success_admin_registring_client_account.png)
+
+## Deposit Money  
+#### the constraints:  
+- accountNumber : Not Null
+- amount : Not Null
+##### 5th, You want to have a transaction right? you need money to transaction. So, you can deoposit goto POST `//api/v1/account/deposit`
+![Creating Admin Account (Put the Right Format to Regist)](images/success_deposit.png)
+
+## About Account/Profile 
+##### 6th, after deposit if you want to see your wallet is topped up or not just hit GET `/api/v1/account/{accountNumber} and you will see the money already added or not.
+![Creating Admin Account (Put the Right Format to Regist)](images/success_deposit.png)
+
+## Transfer To Another Account  
+#### the constraints:  
+- sourceAccountNumber : 8 Characters
+- targetAccountNumber : 8 Characters
+- amount: Not Null
+- description : nullable
+##### 7th, Now, you can transaction to another account if you know the target accountNumber.
+- Go to POST `/api/v1/account/transfer`
+- Make sure, if you want to transfer a person dont leave less than 15000 in your bank. It will rollback.
+- If success, the your transaction has recorded into transaction history
+![Creating Admin Account (Put the Right Format to Regist)](images/success_admin_registring_client_account.png)
+
+## View Transaction History  
+#### the constraints:  
+- accountNumber : 8 Characters
+- page : (auto 0 or 1st page)
+- size: (auto 10 per page)
+##### 8th, After having transaction you can see the proof or history in GET `/api/v1/account/{accountNumber}`
+![Creating Admin Account (Put the Right Format to Regist)](images/success_view_transaction_history.png)
+
+## Change First / Last Name
+##### 8th, User can change the first or last name.
+![Creating Admin Account (Put the Right Format to Regist)](images/success_change_name.png)
+
+
+
+
+
+
+
