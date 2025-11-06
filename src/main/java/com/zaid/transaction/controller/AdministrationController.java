@@ -1,7 +1,7 @@
 package com.zaid.transaction.controller;
 
 import com.zaid.transaction.dto.*;
-import com.zaid.transaction.security.service.UserService;
+import com.zaid.transaction.service.UserService;
 import com.zaid.transaction.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
