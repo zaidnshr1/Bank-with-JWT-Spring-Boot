@@ -71,6 +71,7 @@ PUT   `/api/v1/account/edit-profile`  Update first or last name
   
   
 # 📷 DOCUMENTATION
+![Architecture (User)](images/architecture_ecommerce.png)
 ## Creating Admin Account  
 #### the constraints:  
 - firstName : Not Null
