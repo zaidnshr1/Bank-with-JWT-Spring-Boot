@@ -1,10 +1,10 @@
-# 🏦 Banking API using Spring Boot, Spring Security, and JWT
+# Banking API using Spring Boot, Spring Security, and JWT
 
 A simple yet secure banking REST API built with Spring Boot, featuring JWT authentication, role-based access control, and transaction management. This project demonstrates backend development principles like layered architecture, secure authentication, database integration, clear documentation.
 
 ---
 
-## 🧩 Tech Stack
+## Tech Stack
 
 - Java 21
 - Spring Boot 3
