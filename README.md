@@ -45,11 +45,11 @@ mvn spring-boot:run
 insert into roles (id, name) values (1, ROLE_CLIENT), (2, ROLE_ADMIN);
 ```
 
-Server runs at:
-👉 [http://localhost:8080](http://localhost:8080)
+Server runs at:  
+[http://localhost:8080](http://localhost:8080)
 
 
-## 🚀 Main Endpoints
+## Main Endpoints
 
 ### 🔓 Public
 
